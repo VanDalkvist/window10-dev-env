@@ -1,0 +1,13 @@
+require "#{File.dirname(__FILE__)}/../../core/vagrant/Vagrantfile.core"
+
+UbuntuSampleVM.ubuntu_sample(box: 'gusztavvargadr/u14', memory: 4096, cpus: 2)
+WindowsSampleVM.windows_sample(box: 'gusztavvargadr/w16sc-de', memory: 4096, cpus: 2)
+
+Environment.new(name: 'standalone.docker.local') do |environment|
+  UbuntuSampleVM.new(environment, name: 'linux') do |vm|
+    DockerProvisioner.new(vm)
+  end
+
+  WindowsSampleVM.new(environment, name: 'windows') do |vm|
+  end
+end

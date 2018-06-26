@@ -1,0 +1,3 @@
+source 'https://supermarket.chef.io'
+
+cookbook 'gusztavvargadr_windows', github: 'gusztavvargadr/infrastructure', rel: 'src/components/windows/chef/cookbooks/gusztavvargadr_windows'

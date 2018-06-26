@@ -1,0 +1,22 @@
+{
+  "builds": [
+    {
+      "name": "virtualbox-iso",
+      "builder_type": "virtualbox-iso",
+      "build_time": 1529050063,
+      "files": [
+        {
+          "name": "output\\gusztavvargadr-w10e-vs17c-sql17d-virtualbox-core-1803.0.0-1529040911-disk001.vmdk",
+          "size": 19363366400
+        },
+        {
+          "name": "output\\gusztavvargadr-w10e-vs17c-sql17d-virtualbox-core-1803.0.0-1529040911.ovf",
+          "size": 6695
+        }
+      ],
+      "artifact_id": "VM",
+      "packer_run_uuid": "d64aa3ff-ed62-4c5b-f519-681172255546"
+    }
+  ],
+  "last_run_uuid": "d64aa3ff-ed62-4c5b-f519-681172255546"
+}

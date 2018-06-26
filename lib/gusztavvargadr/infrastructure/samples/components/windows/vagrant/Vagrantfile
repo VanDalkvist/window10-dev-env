@@ -1,0 +1,9 @@
+require "#{File.dirname(__FILE__)}/../../core/vagrant/Vagrantfile.core"
+
+Provider.core(memory: 2048, cpus: 1)
+
+Environment.new(name: 'windows.local') do |environment|
+  WindowsSampleVM.new(environment, name: '10e', box: 'gusztavvargadr/w10e')
+
+  WindowsSampleVM.new(environment, name: '16s', box: 'gusztavvargadr/w16s')
+end

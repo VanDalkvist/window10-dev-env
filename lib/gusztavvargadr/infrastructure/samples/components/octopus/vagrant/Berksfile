@@ -1,0 +1,8 @@
+require "#{File.dirname(__FILE__)}/../../../../src/components/core/chef/Berksfile.core"
+
+gusztavvargadr_sources
+
+cookbook 'gusztavvargadr_octopus_samples', path: '../chef/cookbooks/gusztavvargadr_octopus_samples'
+
+gusztavvargadr_cookbook 'components', 'octopus'
+gusztavvargadr_cookbook 'components', 'windows'

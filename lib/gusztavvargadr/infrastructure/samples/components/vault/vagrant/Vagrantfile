@@ -1,0 +1,34 @@
+require "#{File.dirname(__FILE__)}/../../../Vagrantfile.core"
+require "#{File.dirname(__FILE__)}/../../../../src/components/vault/vagrant/Vagrantfile.core"
+
+server_count = 1
+
+Environment.environment(
+  vault: {
+    token: '',
+  },
+  consul: {
+    address: 'server-1.consul.local:8501',
+    scheme: 'https',
+    path: 'vault/',
+    token: '9ca03b8d53064957b5db56b1ddc43111',
+  }
+)
+
+Environment.new(name: 'vault.local') do |environment|
+  servers = []
+  (1..server_count).each do |i|
+    vm = UbuntuSampleVM.new(environment, name: "server-#{i}") do |server|
+      VaultServer.new(server)
+    end
+    servers.push vm
+  end
+
+  VM.new(environment, name: 'ui') do |ui|
+    VaultUi.new(ui, vault: { servers: servers.map(&:hostname) })
+  end
+
+  VM.new(environment, name: 'cli') do |cli|
+    VaultCli.new(cli, vault: { servers: servers.map(&:hostname) })
+  end
+end

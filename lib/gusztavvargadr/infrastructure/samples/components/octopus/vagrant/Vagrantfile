@@ -1,0 +1,32 @@
+require "#{File.dirname(__FILE__)}/../../core/vagrant/Vagrantfile.core"
+require "#{File.dirname(__FILE__)}/../../../../src/components/octopus/vagrant/Vagrantfile.core"
+
+options = Options.new(File.dirname(__FILE__)).options
+
+Environment.new(name: 'octopus.local') do |environment|
+  server = WindowsSampleVM.new(environment, name: 'server', box: 'gusztavvargadr/w16s-sql14d') do |vm|
+    OctopusServerChefSoloProvisioner.new(
+      vm,
+      options['server']['octopus_server']
+    )
+  end
+
+  tentacles = []
+  (1..options['tentacle']['instance_count']).each do |i|
+    tentacle = WindowsSampleVM.new(environment, name: "tentacle-#{i}", box: 'gusztavvargadr/w16s') do |vm|
+      OctopusTentacleChefSoloProvisioner.new(
+        vm,
+        options['tentacle']['octopus_tentacle'].deep_merge(
+          'json' => {
+            'gusztavvargadr_octopus' => {
+              'tentacle' => {
+                'server_web_address' => "http://#{server.hostname}",
+              },
+            },
+          }
+        )
+      )
+    end
+    tentacles.push tentacle
+  end
+end

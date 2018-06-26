@@ -1,0 +1,10 @@
+{
+  "run_list": [
+    "recipe[gusztavvargadr_windows::chocolatey_packages]"
+  ],
+  "gusztavvargadr_windows": {
+    "chocolatey_packages": {
+      "nuget.commandline": {}
+    }
+  }
+}

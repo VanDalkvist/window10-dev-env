@@ -1,0 +1,21 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = "win10-vs17c-sql17d-virtualbox-env"
+  config.vm.box_url = "E:\\Boxes\\gusztavvargadr-w10e-vs17c-sql17d-virtualbox-core-1803.0.0-1529040913.box"
+  config.vm.provider "virtualbox" do |vb|
+    vb.linked_clone = true
+    vb.memory = 6096
+    vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
+    vb.customize ["modifyvm", :id, "--draganddrop", "bidirectional"]
+    vb.customize ["modifyvm", :id, "--cpus", 4]
+  end
+  config.vm.network "private_network", ip: "10.0.0.2"
+  config.vm.provision "windows-update"
+  config.vm.provision "shell", path: "ps.ps1", args: "provision/chocolatey.ps1"
+  config.vm.provision "shell", path: "ps.ps1", args: "provision/base.ps1"
+  config.vm.provision "shell", path: "ps.ps1", args: "provision/web.ps1"
+  config.vm.provision "shell", path: "ps.ps1", args: "provision/IDEs.ps1"
+  config.vm.provision "shell", path: "ps.ps1", args: "provision/node-env.ps1"
+  config.vm.provision "shell", path: "ps.ps1", args: "provision/desktop.ps1"
+  config.vm.provision "shell", path: "ps.ps1", args: "provision/tools.ps1"
+  config.vm.provision "reload"
+end

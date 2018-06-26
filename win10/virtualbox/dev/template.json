@@ -1,0 +1,167 @@
+{
+  "variables": {
+    "name": "w10e-vs17c-sql17d-virtualbox-core",
+    "description": "Windows 10 Enterprise, Visual Studio 2017 Community, SQL Server 2017 Developer",
+    "version": "1803.0.0",
+    "author": "gusztavvargadr",
+    "output_directory": "output",
+    "iso_url": "http://care.dlservice.microsoft.com/dl/download/6/5/D/65D18931-F626-4A35-AD5B-F5DA41FE6B76/16299.15.170928-1534.rs3_release_CLIENTENTERPRISEEVAL_OEMRET_x64FRE_en-us.iso",
+    "iso_checksum_type": "sha1",
+    "iso_checksum": "3b5f9494d870726d6d8a833aaf6169a964b8a9be",
+    "virtualbox_memory": "4096",
+    "virtualbox_cpus": "2",
+    "virtualbox_headless": "true",
+    "virtualbox_boot_wait": "10s",
+    "virtualbox_communicator": "winrm",
+    "virtualbox_winrm_username": "vagrant",
+    "virtualbox_winrm_password": "vagrant",
+    "virtualbox_winrm_timeout": "1h",
+    "virtualbox_guest_additions_mode": "disable",
+    "virtualbox_shutdown_command": "A:/shutdown.cmd",
+    "virtualbox_post_shutdown_delay": "5s",
+    "virtualbox_guest_os_type": "Windows10_64",
+    "virtualbox_disk_size": "130048",
+    "virtualbox_floppy_files": "builders/virtualbox-iso/floppy",
+    
+    "chef_source": "provisioners/chef",
+    "chef_destination": "C:/packer-chef",
+    "chef_guest_os_type": "windows",
+    "chef_skip_install": "true",
+    "chef_staging_directory": "/tmp/packer-chef-solo",
+    "chef_run_list_prepare": "recipe[gusztavvargadr_packer_vs17c::prepare],recipe[gusztavvargadr_packer_sql17d::prepare],recipe[gusztavvargadr_packer_w10e::prepare],recipe[gusztavvargadr_packer_virtualbox_iso::prepare]",
+    "chef_run_list_install": "recipe[gusztavvargadr_packer_vs17c::install],recipe[gusztavvargadr_packer_sql17d::install],recipe[gusztavvargadr_packer_w10e::install],recipe[gusztavvargadr_packer_virtualbox_iso::install]",
+    "chef_run_list_patch": "recipe[gusztavvargadr_packer_vs17c::patch],recipe[gusztavvargadr_packer_sql17d::patch],recipe[gusztavvargadr_packer_w10e::patch],recipe[gusztavvargadr_packer_virtualbox_iso::patch]",
+    "chef_run_list_cleanup": "recipe[gusztavvargadr_packer_vs17c::cleanup],recipe[gusztavvargadr_packer_sql17d::cleanup],recipe[gusztavvargadr_packer_w10e::cleanup],recipe[gusztavvargadr_packer_virtualbox_iso::cleanup]",
+    "chef_restart_timeout": "1h",
+
+    "vagrant_vagrantfile_template": "postprocessors/vagrant-virtualbox/Vagrantfile"
+  },
+  "description": "{{user `description`}}",
+  "builders": [
+    {
+      "type": "virtualbox-iso",
+      "vm_name": "{{user `author`}}-{{user `name`}}-{{user `version`}}-{{timestamp}}",
+      "guest_os_type": "{{user `virtualbox_guest_os_type`}}",
+      "iso_url": "{{user `iso_url`}}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "vboxmanage": [
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--memory",
+          "{{user `virtualbox_memory`}}"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--cpus",
+          "{{user `virtualbox_cpus`}}"
+        ]
+      ],
+      "disk_size": "{{user `virtualbox_disk_size`}}",
+      "floppy_files": "{{user `virtualbox_floppy_files`}}",
+      "headless": "{{user `virtualbox_headless`}}",
+      "boot_wait": "{{user `virtualbox_boot_wait`}}",
+      "communicator": "{{user `virtualbox_communicator`}}",
+      "winrm_username": "{{user `virtualbox_winrm_username`}}",
+      "winrm_password": "{{user `virtualbox_winrm_password`}}",
+      "winrm_timeout": "{{user `virtualbox_winrm_timeout`}}",
+      "guest_additions_mode": "{{user `virtualbox_guest_additions_mode`}}",
+      "shutdown_command": "{{user `virtualbox_shutdown_command`}}",
+      "post_shutdown_delay": "{{user `virtualbox_post_shutdown_delay`}}",
+      "output_directory": "{{user `output_directory`}}"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell-local",
+      "command": "berks package -b {{user `chef_source`}}/Berksfile {{user `chef_source`}}/upload/cookbooks.tar.gz"
+    },
+    {
+      "type": "file",
+      "source": "{{user `chef_source`}}/upload/",
+      "destination": "{{user `chef_destination`}}"
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "{{user `chef_destination`}}/prepare.ps1"
+      ]
+    },
+    {
+      "type": "chef-solo",
+      "guest_os_type": "{{user `chef_guest_os_type`}}",
+      "skip_install": "{{user `chef_skip_install`}}",
+      "staging_directory": "{{user `chef_staging_directory`}}",
+      "remote_cookbook_paths": "{{user `chef_destination`}}/cookbooks",
+      "run_list": "{{user `chef_run_list_prepare`}}"
+    },
+    {
+      "type": "windows-restart",
+      "restart_timeout": "{{user `chef_restart_timeout`}}"
+    },
+    {
+      "type": "chef-solo",
+      "guest_os_type": "{{user `chef_guest_os_type`}}",
+      "skip_install": "{{user `chef_skip_install`}}",
+      "staging_directory": "{{user `chef_staging_directory`}}",
+      "remote_cookbook_paths": "{{user `chef_destination`}}/cookbooks",
+      "run_list": "{{user `chef_run_list_install`}}"
+    },
+    {
+      "type": "windows-restart",
+      "restart_timeout": "{{user `chef_restart_timeout`}}"
+    },
+    {
+      "type": "chef-solo",
+      "guest_os_type": "{{user `chef_guest_os_type`}}",
+      "skip_install": "{{user `chef_skip_install`}}",
+      "staging_directory": "{{user `chef_staging_directory`}}",
+      "remote_cookbook_paths": "{{user `chef_destination`}}/cookbooks",
+      "run_list": "{{user `chef_run_list_patch`}}"
+    },
+    {
+      "type": "windows-restart",
+      "restart_timeout": "{{user `chef_restart_timeout`}}"
+    },
+    {
+      "type": "chef-solo",
+      "guest_os_type": "{{user `chef_guest_os_type`}}",
+      "skip_install": "{{user `chef_skip_install`}}",
+      "staging_directory": "{{user `chef_staging_directory`}}",
+      "remote_cookbook_paths": "{{user `chef_destination`}}/cookbooks",
+      "run_list": "{{user `chef_run_list_patch`}}"
+    },
+    {
+      "type": "windows-restart",
+      "restart_timeout": "{{user `chef_restart_timeout`}}"
+    },
+    {
+      "type": "chef-solo",
+      "guest_os_type": "{{user `chef_guest_os_type`}}",
+      "skip_install": "{{user `chef_skip_install`}}",
+      "staging_directory": "{{user `chef_staging_directory`}}",
+      "remote_cookbook_paths": "{{user `chef_destination`}}/cookbooks",
+      "run_list": "{{user `chef_run_list_cleanup`}}"
+    },
+    {
+      "type": "powershell",
+      "inline": [
+        "{{user `chef_destination`}}/cleanup.ps1"
+      ]
+    }
+  ],
+  "post-processors": [
+    {
+      "type": "manifest",
+      "output": "manifest.json"
+    },
+    {
+      "type": "vagrant",
+      "keep_input_artifact": true,
+      "output": "{{user `output_directory`}}/{{user `author`}}-{{user `name`}}-{{user `version`}}-{{timestamp}}.box",
+      "vagrantfile_template": "{{user `vagrant_vagrantfile_template`}}"
+    }
+  ]
+}

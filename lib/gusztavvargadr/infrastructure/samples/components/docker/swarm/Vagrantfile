@@ -1,0 +1,43 @@
+require "#{File.dirname(__FILE__)}/../../core/vagrant/Vagrantfile.core"
+
+manager_linux_count = 2
+manager_windows_count = 1
+worker_linux_count = 1
+worker_windows_count = 1
+
+UbuntuSampleVM.ubuntu_sample(box: 'gusztavvargadr/u14', memory: 4096, cpus: 2)
+WindowsSampleVM.windows_sample(box: 'gusztavvargadr/w16sc-de', memory: 4096, cpus: 2)
+
+Environment.new(name: 'swarm.docker.local') do |environment|
+  managers = []
+  (1..manager_linux_count).each do |i|
+    manager = UbuntuSampleVM.new(environment, name: "manager-linux-#{i}") do |vm|
+      DockerProvisioner.new(vm)
+      ShellProvisioner.new(vm, 'path' => 'manager.sh')
+    end
+    managers.push manager
+  end
+
+  (1..manager_windows_count).each do |i|
+    manager = WindowsSampleVM.new(environment, name: "manager-windows-#{i}") do |vm|
+      ShellProvisioner.new(vm, 'path' => 'manager.ps1')
+    end
+    managers.push manager
+  end
+
+  workers = []
+  (1..worker_linux_count).each do |i|
+    worker = UbuntuSampleVM.new(environment, name: "worker-linux-#{i}") do |vm|
+      DockerProvisioner.new(vm)
+      ShellProvisioner.new(vm, 'path' => 'worker.sh')
+    end
+    workers.push worker
+  end
+
+  (1..worker_windows_count).each do |i|
+    worker = WindowsSampleVM.new(environment, name: "worker-windows-#{i}") do |vm|
+      ShellProvisioner.new(vm, 'path' => 'worker.ps1')
+    end
+    workers.push worker
+  end
+end

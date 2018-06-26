@@ -1,0 +1,53 @@
+driver:
+  name: vagrant
+  vagrantfiles:
+    - ../../../core/chef/Vagrantfile.kitchen
+  provider: <%= ENV['VAGRANT_PREFERRED_PROVIDERS'] || ENV['VAGRANT_DEFAULT_PROVIDER'] %>
+
+provisioner:
+  name: chef_solo
+  product_name: chef
+  product_version: 12.8.1
+
+verifier:
+  name: inspec
+
+platforms:
+  - name: w10e
+    transport:
+      name: winrm
+    driver:
+      box: gusztavvargadr/w10e
+  - name: w16s
+    transport:
+      name: winrm
+    driver:
+      box: gusztavvargadr/w16s
+  - name: w16sc
+    transport:
+      name: winrm
+    driver:
+      box: gusztavvargadr/w16s
+  # - name: u14
+  #   transport:
+  #     name: ssh
+  #   driver:
+  #     box: gusztavvargadr/u14
+
+suites:
+  - name: engine-community
+    run_list:
+      - recipe[gusztavvargadr_docker_test::engine_community]
+  - name: engine-enterprise
+    run_list:
+      - recipe[gusztavvargadr_docker_test::engine_enterprise]
+    excludes:
+      - w10e
+      # - u14
+  - name: images
+    run_list:
+      - recipe[gusztavvargadr_docker_test::images]
+    attributes:
+      gusztavvargadr_docker_test:
+        images:
+          hello-world:

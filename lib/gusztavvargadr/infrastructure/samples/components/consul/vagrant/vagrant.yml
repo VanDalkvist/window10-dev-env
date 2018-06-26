@@ -1,0 +1,29 @@
+server:
+  instance_count: 3
+  consul_server:
+    json:
+      gusztavvargadr_consul:
+        server:
+          config:
+            options:
+              datacenter: local
+
+client_ubuntu:
+  instance_count: 1
+  consul_client:
+    json:
+      gusztavvargadr_consul:
+        client:
+          config:
+            options:
+              datacenter: local
+
+client_windows:
+  instance_count: 1
+  consul_client:
+    json:
+      gusztavvargadr_consul:
+        client:
+          config:
+            options:
+              datacenter: local

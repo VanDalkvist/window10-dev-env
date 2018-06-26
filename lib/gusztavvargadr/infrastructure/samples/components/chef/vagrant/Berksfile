@@ -1,0 +1,5 @@
+require "#{File.dirname(__FILE__)}/../../../../src/components/core/chef/Berksfile.core"
+
+gusztavvargadr_sources
+
+gusztavvargadr_cookbook 'components', 'windows'

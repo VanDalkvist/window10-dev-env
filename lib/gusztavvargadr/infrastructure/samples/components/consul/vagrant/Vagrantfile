@@ -1,0 +1,74 @@
+require "#{File.dirname(__FILE__)}/../../core/vagrant/Vagrantfile.core"
+require "#{File.dirname(__FILE__)}/../../../../src/components/consul/vagrant/Vagrantfile.core"
+
+options = Options.new(File.dirname(__FILE__)).options
+
+Environment.new(name: 'consul.local') do |environment|
+  servers = []
+  (1..options['server']['instance_count']).each do |i|
+    server = UbuntuSampleVM.new(environment, name: "server-#{i}") do |vm|
+      ConsulServerChefSoloProvisioner.new(
+        vm,
+        options['server']['consul_server'].deep_merge(
+          'json' => {
+            'gusztavvargadr_consul' => {
+              'server' => {
+                'config' => {
+                  'options' => {
+                    'retry_join' => servers.map(&:hostname),
+                  },
+                },
+              },
+            },
+          }
+        )
+      )
+    end
+    servers.push server
+  end
+
+  clients = []
+  (1..options['client_ubuntu']['instance_count']).each do |i|
+    client_ubuntu = UbuntuSampleVM.new(environment, name: "client-ubuntu-#{i}") do |vm|
+      ConsulClientChefSoloProvisioner.new(
+        vm,
+        options['client_ubuntu']['consul_client'].deep_merge(
+          'json' => {
+            'gusztavvargadr_consul' => {
+              'client' => {
+                'config' => {
+                  'options' => {
+                    'retry_join' => servers.map(&:hostname),
+                  },
+                },
+              },
+            },
+          }
+        )
+      )
+    end
+    clients.push client_ubuntu
+  end
+
+  (1..options['client_windows']['instance_count']).each do |i|
+    client_windows = WindowsSampleVM.new(environment, name: "client-windows-#{i}") do |vm|
+      ConsulClientChefSoloProvisioner.new(
+        vm,
+        options['client_windows']['consul_client'].deep_merge(
+          'json' => {
+            'gusztavvargadr_consul' => {
+              'client' => {
+                'config' => {
+                  'options' => {
+                    'retry_join' => servers.map(&:hostname),
+                  },
+                },
+              },
+            },
+          }
+        )
+      )
+    end
+    clients.push client_windows
+  end
+end

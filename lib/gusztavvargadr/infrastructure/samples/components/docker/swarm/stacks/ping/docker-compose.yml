@@ -1,0 +1,12 @@
+version: "3"
+services:
+  linux:
+    image: alpine:latest
+    command: ping docker.com
+    deploy:
+      replicas: 2
+  windows:
+    image: microsoft/nanoserver:latest
+    command: ping -t docker.com
+    deploy:
+      replicas: 2

@@ -1,0 +1,26 @@
+{
+  // JSON Formatter (https://chrome.google.com/webstore/detail/json-formatter/bcjindcccaagfpapjjmafapmmgkkhgoa).
+  "bcjindcccaagfpapjjmafapmmgkkhgoa": {
+    "external_update_url": "https://clients2.google.com/service/update2/crx"
+  },
+  // uBlock Origin (https://chrome.google.com/webstore/detail/ublock-origin/cjpalhdlnbpafiamejdnhcphjbkeiagm).
+  "cjpalhdlnbpafiamejdnhcphjbkeiagm": {
+    "external_update_url": "https://clients2.google.com/service/update2/crx"
+  },
+  // Back to Backspace (https://chrome.google.com/webstore/detail/back-to-backspace/cldokedgmomhbifmiiogjjkgffhcbaec).
+  "cldokedgmomhbifmiiogjjkgffhcbaec": {
+    "external_update_url": "https://clients2.google.com/service/update2/crx"
+  },
+  // Google Переводчик (https://chrome.google.com/webstore/detail/google-translate/aapbdbdomjkkjkaonfhkkikfgjllcleb)
+  "aapbdbdomjkkjkaonfhkkikfgjllcleb": {
+	"external_update_url": "https://clients2.google.com/service/update2/crx"
+  },
+  // React Developer Tools (https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi)
+  "fmkadmapgofadopljbjfkapdkoienihi": {
+	"external_update_url": "https://clients2.google.com/service/update2/crx"
+  },
+  // Redux Developer Tools (https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd)
+  "lmhkpmbekcpmknklioeibfkpmmfibljd": {
+  	"external_update_url": "https://clients2.google.com/service/update2/crx"
+  }
+}

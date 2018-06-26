@@ -1,0 +1,8 @@
+* text=auto
+
+*.sh text eol=lf
+*.conf text eol=lf
+*.pem txt eol=lf
+*.key text eol=lf
+*.csr txt eol=lf
+*.cert text eol=lf

@@ -1,0 +1,7 @@
+require "#{File.dirname(__FILE__)}/../../../core/chef/Berksfile.core"
+
+gusztavvargadr_infrastructure_sources
+
+gusztavvargadr_infrastructure_cookbook 'components', 'docker', 'test'
+gusztavvargadr_infrastructure_cookbook 'components', 'docker'
+gusztavvargadr_cookbook 'components', 'windows'
