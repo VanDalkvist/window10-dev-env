@@ -1,7 +1,7 @@
 # window10-dev-env
 Building Win10 .NET development environment with [Packer](https://www.packer.io/) and [Vagrant](https://www.vagrantup.com/).
 
-Based on [rgl/docker-windows-2016-vagrant](https://github.com/rgl/docker-windows-2016-vagrant) and [gusztavvargadr/packer](https://github.com/gusztavvargadr/packer) repositories.
+Based on [rgl/docker-windows-2016-vagrant](https://github.com/rgl/docker-windows-2016-vagrant) and [gusztavvargadr/packer](https://github.com/gusztavvargadr/packer) repositories. Read [The Gusztáv's article](https://blog.gusztavvargadr.me/5-packer-templates-for-net-development-with-hyper-v-and-virtualbox-c20aa47eaa3f)
 
 ## Intro
 Packer instructions have configuration for virtualbox provider only.
