@@ -44,6 +44,8 @@ After finishing this step you will have a Vagrant box and ovf file is needed for
 
 ### 2. Up vagrant machine
 
+NOTE: [Changing default paths for your boxes and virtual machines](https://medium.com/@cedricdue/moving-vagrant-boxes-and-related-virtualbox-vms-to-another-drive-f1d7c50d20bc)
+
 You can change `box_url` in your `Vagrantfile` to your path to the box created by Packer.
 Or you can add your box to the local env like:
 
